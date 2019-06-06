@@ -1,10 +1,3 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
-# section 1 load all the necessary modules and packages
 import pandas as pd
 import numpy as np
 import re as re
@@ -16,9 +9,7 @@ import netCDF4 as nc4
 import time
 
 
-# In[2]:
-
-
+#####################
 # defenition of subroutines
 # defenition to find the end of a header line given the line look_up text such as ":endheader"
 def find_line_number_for_text(name_of_file,lookup_text):
@@ -26,7 +17,8 @@ def find_line_number_for_text(name_of_file,lookup_text):
         for num, line in enumerate(myFile, 1):
             if lookup_text in line:
                 return num
-            
+
+            # read the content
 def read_info_from_header(name_of_file,lookup_text):            
     with open(name_of_file) as myFile:
         for line in myFile:
@@ -34,18 +26,18 @@ def read_info_from_header(name_of_file,lookup_text):
                 return line.partition(lookup_text)[2].strip()
 
 
-# In[3]:
-
-
+#####################
+# user specify the code
+#####################
 file_names = glob.glob('C:/Users/shg096/Dropbox/*Daily_Flow*') # name of the streamflow
 idx = pd.date_range('01-01-1850', '01-01-2020') # starting and ending time for the streamflow to be saved
 t = len(idx) # number of time steps
 n = np.array(len(file_names)) # number of station
 
 
-# In[4]:
-
-
+#####################
+# extraction of data from ts3
+#####################
 lat_all = None
 lon_all = None
 Station_all = None
@@ -150,22 +142,17 @@ for i in np.arange(n):
 Station_all = np.array(Station_all, dtype='object')
 StationName_all = np.array(StationName_all, dtype='object')
 
-
-# In[5]:
-
-
-# creating an netCFD file given the data
-
-ncid = nc4.Dataset("NetCDF_Python_10_test113.nc", "w", format="NETCDF4")
+#####################
+# NetCDF creation
+#####################
+ncid = nc4.Dataset("HYDAT_guages.nc", "w", format="NETCDF4")
 
 dimid_n_station = ncid.createDimension('n',n)
 dimid_T = ncid.createDimension('time',t)
 
-
-# In[6]:
-
-
-# Variables
+#####################
+# Variables time
+#####################
 time_varid = ncid.createVariable('time','i4',('time',))
 
 # Attributes
@@ -178,11 +165,9 @@ time_varid.axis          = 'T'
 # Write data
 time_varid[:] = np.arange(t)
 
-
-# In[7]:
-
-
-# Variables
+#####################
+# Variables flow
+#####################
 Daily_flow_varid = ncid.createVariable('Flow','f8',('n','time',),fill_value=-1)
 
 # Attributes
@@ -193,11 +178,9 @@ Daily_flow_varid.coordinates    = 'lon lat Station_ID'
 # Write data
 Daily_flow_varid[:] = flows_all # should be transpose
 
-
-# In[8]:
-
-
-## falg as string
+#####################
+## varibale falg
+#####################
 
 Flags_varid = ncid.createVariable('flags','S1',('n','time',))
 
@@ -213,10 +196,9 @@ Flags_varid[:] = nc4.stringtochar(temp) # manual conversion to char array
 Flags_varid._Encoding = 'ascii'
 
 
-# In[9]:
-
-
-# Variables
+#####################
+# Variables DrainageAreaEff
+#####################
 Effective_area_varid = ncid.createVariable('DrainageAreaEff','f8',('n',),fill_value=-1)
 
 # Attributes
@@ -226,11 +208,9 @@ Effective_area_varid.units         = 'm2'
 # Write data
 Effective_area_varid[:] = DrainageAreaEff_all # should be transpose
 
-
-# In[10]:
-
-
-# Variables
+#####################
+# Variables DrainageArea
+#####################
 Area_varid = ncid.createVariable('DrainageArea','f8',('n',),fill_value=-1)
 
 # Attributes
@@ -240,11 +220,9 @@ Area_varid.units         = 'm2'
 # Write data
 Area_varid[:] = DrainageArea_all # should be transpose
 
-
-# In[11]:
-
-
-# Variables
+#####################
+# Variables lat and lon
+#####################
 lat_varid = ncid.createVariable('lat','f8',('n',))
 lon_varid = ncid.createVariable('lon','f8',('n',))
 
@@ -260,10 +238,9 @@ lon_varid.standard_name  = 'longitude'
 lat_varid[:] = lon_all
 lon_varid[:] = lat_all
 
-
-# In[12]:
-
-
+#####################
+# varibale station ID
+#####################
 Station_ID_varid = ncid.createVariable('Station_ID',str,('n',))
 
 # Attributes
@@ -274,10 +251,9 @@ Station_ID_varidcf_role        = 'timeseries_id'
 # Write data
 Station_ID_varid[:] = Station_all # should be transpose
 
-
-# In[13]:
-
-
+#####################
+# name of the staiton
+#####################
 Station_Name_varid = ncid.createVariable('Station_Name',str,('n',))
 
 # Attributes
@@ -288,10 +264,9 @@ Station_Name_varid.units         = '1'
 Station_Name_varid[:] = StationName_all
 
 
-# In[14]:
-
-
+#####################
 # ID
+#####################
 # Variables
 ID_varid = ncid.createVariable('ID','i4',('n',))
 
@@ -303,18 +278,13 @@ ID_varid.units         = '1'
 ID_varid[:] = np.arange(n)+1
 
 
-# In[15]:
-
-
+#####################
 ncid.Conventions = 'CF-1.6'
-ncid.License     = 'The file is created by Shervan Gharari, NHRC, Saskatoon under GPL3'
+ncid.License     = 'The file is created by Shervan Gharari, under GPL3'
 ncid.history     = 'Created ' + time.ctime(time.time())
-#ncid.source      = 'The file contains data from 417 stations (starts with 05 WSC). The data is converted from ts3 format generated by EC Explorer for gauges with more than 10 years of data and 100 KM2 drainagae area which have both flow and water level'
-ncid.source      = 'The file contains data from many selected stations. The data is converted from ts3 format generated by EC Explorer for gauges with more than 10 years of data and 100 KM2 drainagae area'
+#ncid.source      = ' '
+#ncid.source      = ' '
 
-
-# In[16]:
-
-
+#####################
 ncid.close()
 
