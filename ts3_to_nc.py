@@ -98,7 +98,7 @@ for i in np.arange(n):
     NoDataValue = float(NoDataValue)
     
     
-    ## 
+    ## this can be written with pd.csvread but there was issues with some of the files so here we go line by line
     lines = open(file_name).read().split('\n')
     lines_as_array = np.asarray(lines) # put lines in arrays
     lines_as_array=np.delete(lines_as_array, range(0,(int(line_header_ends))),axis=0) # remove the header
