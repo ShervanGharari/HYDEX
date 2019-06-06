@@ -1,3 +1,4 @@
+# section 1 load all the necessary modules and packages
 import pandas as pd
 import numpy as np
 import re as re
@@ -29,7 +30,8 @@ def read_info_from_header(name_of_file,lookup_text):
 #####################
 # user specify the code
 #####################
-file_names = glob.glob('C:/Users/shg096/Dropbox/*Daily_Flow*') # name of the streamflow
+file_names = glob.glob('F:/HYDAT/data_ts3/*Daily_Flow*') # name of the streamflow
+nc_name = "F:/HYDAT/data_ts3/Final.nc"
 idx = pd.date_range('01-01-1850', '01-01-2020') # starting and ending time for the streamflow to be saved
 t = len(idx) # number of time steps
 n = np.array(len(file_names)) # number of station
@@ -53,9 +55,13 @@ flags_all = np.chararray([n,t,])
 for i in np.arange(n):
     
     file_name = file_names [i]
+    print(i)
+    print(file_name)
     
     # first find the line the header finishes
+    line_header_ends = None
     line_header_ends = find_line_number_for_text(file_name,':EndHeader')
+    print(line_header_ends)
     
     # read the lat of the station
     lat = read_info_from_header(file_name,':LocationX')
@@ -92,12 +98,43 @@ for i in np.arange(n):
     NoDataValue = float(NoDataValue)
     
     
-    # read the data and have them in data frame
-    data = None
-    data = pd.read_csv(file_name, sep=' |:|/', header=line_header_ends)
-    data.columns = ["year", "month", "day", "hour", "minute","flow", "flags"]
+    ## 
+    lines = open(file_name).read().split('\n')
+    lines_as_array = np.asarray(lines) # put lines in arrays
+    lines_as_array=np.delete(lines_as_array, range(0,(int(line_header_ends))),axis=0) # remove the header
     
-    # in 0.13 the above or this will work
+    date_vec = np.zeros((len(lines_as_array)-1,6)) #-1 because the last line of data is empty (/n)
+    values = np.zeros((len(lines_as_array)-1,1)) #-1 because the last line of data is empty (/n)
+    flags = np.chararray((len(lines_as_array)-1,1)) #-1 because the last line of data is empty (/n)
+    
+    for number in range(0,len(lines_as_array)-1,1): # -1 not to account for the last line whcih is empty (/n)
+    
+        lines_split = re.split('/|:| ',lines_as_array[number]) # replace the date using / and : to its numbers
+        
+        date_vec[number,0] = float(lines_split[0])
+        date_vec[number,1] = float(lines_split[1])
+        date_vec[number,2] = float(lines_split[2])
+        date_vec[number,3] = float(lines_split[3])
+        date_vec[number,4] = float(lines_split[4])
+        date_vec[number,5] = 0
+        
+        values[number,0] = lines_split[5] # values
+    
+        flags[number,0] = lines_split[6] # flags
+    
+    
+    data = pd.DataFrame()
+    # read the data and have them in data frame
+    data['year'] = np.array(date_vec[:,0])
+    data['month'] = np.array(date_vec[:,1])
+    data['day'] = np.array(date_vec[:,2])
+    data['hour'] = np.array(date_vec[:,3])
+    data['minute'] = np.array(date_vec[:,4])
+    data['flow'] = values[:,0]
+    data['flags'] = flags[:,0]
+    #print(data)
+    
+    #int the above or this will work
     data ['Date'] = pd.to_datetime(data.year*10000+data.month*100+data.day,format='%Y%m%d')
     data.index = pd.DatetimeIndex(data['Date'])
     
@@ -105,12 +142,13 @@ for i in np.arange(n):
     data_temp = data
     data_temp = data_temp.reindex(idx, fill_value=-1)
     data_temp['flow'].replace(to_replace=[None], value=-1, inplace=True)
+    data_temp['flow'].replace(to_replace=NoDataValue, value=-1, inplace=True)
     flows = np.array(data_temp ['flow'])
     
     # data['flags'].replace('None', ' ', inplace=True)
     data_temp = data
-    data_temp = data_temp.reindex(idx, fill_value=' ')
-    data_temp['flags'].replace(to_replace=[None], value=[' '], inplace=True)
+    data_temp = data_temp.reindex(idx, fill_value='')
+    data_temp['flags'].replace(to_replace=[None], value=[''], inplace=True)
     flags = data_temp['flags']
     
     print(Station)
@@ -125,9 +163,7 @@ for i in np.arange(n):
         NoDataValue_all = np.array(NoDataValue)
         flows_all = flows
         flags_all [i,:] = flags
-        print(Station_all)
     else:
-        print(Station_all)
         lat_all = np.append(lat_all,lat)
         lon_all = np.append(lon_all,lon)
         Station_all.append(Station)
@@ -138,9 +174,9 @@ for i in np.arange(n):
         flows_all = np.append(flows_all, flows)
         flags_all [i,:] = flags
 
-
 Station_all = np.array(Station_all, dtype='object')
 StationName_all = np.array(StationName_all, dtype='object')
+
 
 #####################
 # NetCDF creation
