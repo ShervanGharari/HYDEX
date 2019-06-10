@@ -11,6 +11,15 @@ import time
 
 
 #####################
+# user specify the code
+#####################
+file_names = glob.glob('F:/HYDAT/data_ts3/*Daily_Flow*') # name of the streamflow
+nc_name = "F:/HYDAT/data_ts3/Final.nc" # the name of the nc file to be written
+idx = pd.date_range('01-01-1850', '01-01-2020') # starting and ending time for the streamflow to be saved
+t = len(idx) # number of time steps
+n = np.array(len(file_names)) # number of station
+
+#####################
 # defenition of subroutines
 # defenition to find the end of a header line given the line look_up text such as ":endheader"
 def find_line_number_for_text(name_of_file,lookup_text):
@@ -25,17 +34,6 @@ def read_info_from_header(name_of_file,lookup_text):
         for line in myFile:
             if line.startswith(lookup_text):
                 return line.partition(lookup_text)[2].strip()
-
-
-#####################
-# user specify the code
-#####################
-file_names = glob.glob('F:/HYDAT/data_ts3/*Daily_Flow*') # name of the streamflow
-nc_name = "F:/HYDAT/data_ts3/Final.nc"
-idx = pd.date_range('01-01-1850', '01-01-2020') # starting and ending time for the streamflow to be saved
-t = len(idx) # number of time steps
-n = np.array(len(file_names)) # number of station
-
 
 #####################
 # extraction of data from ts3
@@ -97,8 +95,10 @@ for i in np.arange(n):
     NoDataValue = read_info_from_header(file_name,':NoDataValue')
     NoDataValue = float(NoDataValue)
     
-    
-    ## this can be written with pd.csvread but there was issues with some of the files so here we go line by line
+    #######################
+    # NOTICE: this can be written with pd.csvread but there was issues with some of the files so here we go line by line
+    # however due to some error that was happening for few of the ts3 files the manual code is used instead
+    #######################
     lines = open(file_name).read().split('\n')
     lines_as_array = np.asarray(lines) # put lines in arrays
     lines_as_array=np.delete(lines_as_array, range(0,(int(line_header_ends))),axis=0) # remove the header
@@ -313,14 +313,14 @@ ID_varid.units         = '1'
 # Write data
 ID_varid[:] = np.arange(n)+1
 
-
+#####################
+# header 
 #####################
 ncid.Conventions = 'CF-1.6'
 ncid.License     = 'The file is created by Shervan Gharari, under GPL3'
 ncid.history     = 'Created ' + time.ctime(time.time())
-#ncid.source      = ' '
-#ncid.source      = ' '
+ncid.source      = 'described 417 basins of HYDAT data set with flow and length of more than 10 years and area of more than 100 km2'
+ncid.source      = 'the sata set inclused the flow, non values and flags'
 
 #####################
 ncid.close()
-
