@@ -9,6 +9,10 @@ It is easier to read and compare them.
 
 The data retreval is faster.
 
+Similar starting and ending point for all the data.
+
+Filling of the missing values between the starting and ending point.
+
 ## How to use
 
 open the Environemtn canada data Explorer ().
