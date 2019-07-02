@@ -15,12 +15,12 @@ Filling of the missing values between the starting and ending point.
 
 ## How to use
 
-open the Environemtn canada data Explorer ().
+Open the Environemtn Canada and Climate Change Data Explorer (ECCCDataExplorer).
 
-select the gauges which you are interested by filtering the names, area, etc.
+Select the gauges which you are interested in by filtering the station ID, minumume area, minimume time length of the record.
 
-save the selected gugaes as ts3 format in a folder.
+Save the selected gugaes as ts3 format in a folder by selecting part of all of the stations.
 
-run the ts3_to_HYDAT.py by directing to the folder and ts3.
+Run the ts3_to_HYDAT.py by directing to the folder and ts3.
 
-and enjoy the resulting netcdf which includes streamflow, flags, area of everygages. the code put NaN values for the missing date between the stargint and ending point so it makes ut easier to find the result. sorting 400 gauges took less than hour.
+Enjoy!
