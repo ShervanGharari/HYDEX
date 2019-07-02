@@ -31,6 +31,11 @@ import time
 #####################
 file_names = glob.glob('F:/HYDAT/data_ts3/*Daily_Flow*') # name of the streamflow
 nc_name = "F:/HYDAT/data_ts3/Final.nc" # the name of the nc file to be written
+discription_of_data = 'described 417 basins of HYDAT data set with flow and length of more than 10 years and area of more than 100 km2'
+
+
+#####################
+# creation of some varibale
 idx = pd.date_range('01-01-1850', '01-01-2020') # starting and ending time for the streamflow to be saved
 t = len(idx) # number of time steps
 n = np.array(len(file_names)) # number of station
@@ -333,9 +338,9 @@ ID_varid[:] = np.arange(n)+1
 # header 
 #####################
 ncid.Conventions = 'CF-1.6'
-ncid.License     = 'The file is created by Shervan Gharari, under GPL3'
+ncid.License     = 'The file is created by Shervan Gharari, under GPL3, https://github.com/ShervanGharari/HYDEX'
 ncid.history     = 'Created ' + time.ctime(time.time())
-ncid.source      = 'described 417 basins of HYDAT data set with flow and length of more than 10 years and area of more than 100 km2'
+ncid.source      = discription_of_data
 ncid.source      = 'the sata set inclused the flow, non values and flags'
 
 #####################
