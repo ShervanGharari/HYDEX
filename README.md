@@ -20,8 +20,16 @@ Open the Environemtn Canada and Climate Change Data Explorer ([ECCCDataExplorer]
 
 Select the gauges which you are interested in by filtering the station ID, minumume area, minimume time length of the record.
 
-Save the selected gugaes as ts3 format in a folder by selecting part of all of the stations.
+![image]("https://github.com/ShervanGharari/HYDEX/blob/master/figs/Fig_1.jpg")
 
-Run the ts3_to_HYDAT.py by directing to the folder and ts3.
+Selected part or all (by right click and select all) of the filtered gugaes.
+
+![image]("https://github.com/ShervanGharari/HYDEX/blob/master/figs/Fig_2.jpg")
+
+Export the data into ts3 by choosing export
+
+![image]("https://github.com/ShervanGharari/HYDEX/blob/master/figs/Fig_3.jpg")
+
+Run the ts3_to_HYDAT.py by directing to the folder that the ts3 files are saved, also indicate the locaiton and name of the.
 
 Enjoy!
