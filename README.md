@@ -26,9 +26,11 @@ Selected part or all (by right click and select all) of the filtered gugaes.
 
 ![image]("https://github.com/ShervanGharari/HYDEX/blob/master/figs/Fig_2.jpg")
 
-Export the data into ts3 by choosing export
+Export the data into ts3 by choosing export and selecting flow (or other variable, notice that the name in nc file should be ajusted accordignly)
 
 ![image]("https://github.com/ShervanGharari/HYDEX/blob/master/figs/Fig_3.jpg")
+
+![image]("https://github.com/ShervanGharari/HYDEX/blob/master/figs/Fig_4.jpg")
 
 Run the ts3_to_HYDAT.py by directing to the folder that the ts3 files are saved, also indicate the locaiton and name of the.
 
