@@ -1,4 +1,6 @@
 '''
+This code converts the ts3 data frmat from ECCCDataExplorer to NetCDF.
+
 Authour: Shervan Gharari (https://github.com/ShervanGharari/HYDEX; sh.gharari@gmail.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +33,8 @@ import time
 #####################
 file_names = glob.glob('F:/HYDAT/data_ts3/*Daily_Flow*') # name of the streamflow
 nc_name = "F:/HYDAT/data_ts3/Final.nc" # the name of the nc file to be written
-discription_of_data = 'described 417 basins of HYDAT data set with flow and length of more than 10 years and area of more than 100 km2'
+discription_of_data = 'described 417 basins of HYDAT data set with starting from 05 (Station ID 05XXXXX)\
+flow and length of more than 10 years and area of more than 100 km2'
 
 
 #####################
@@ -249,8 +252,7 @@ Flags_varid.units         = '1'
 # Write data
 temp = np.array([flags_all],dtype='S1')
 print(temp)
-Flags_varid[:] = nc4.stringtochar(temp) # manual conversion to char array
-Flags_varid._Encoding = 'ascii'
+Flags_varid[:] = nc4.stringtochar(temp)
 
 
 #####################
@@ -263,7 +265,7 @@ Effective_area_varid.long_name     = 'Effective Drainage Area'
 Effective_area_varid.units         = 'm2'
 
 # Write data
-Effective_area_varid[:] = DrainageAreaEff_all # should be transpose
+Effective_area_varid[:] = DrainageAreaEff_all
 
 #####################
 # Variables DrainageArea
@@ -275,7 +277,7 @@ Area_varid.long_name     = 'Drainage Area'
 Area_varid.units         = 'm2'
 
 # Write data
-Area_varid[:] = DrainageArea_all # should be transpose
+Area_varid[:] = DrainageArea_all
 
 #####################
 # Variables lat and lon
@@ -306,7 +308,7 @@ Station_ID_varid.units         = '1'
 Station_ID_varidcf_role        = 'timeseries_id'
 
 # Write data
-Station_ID_varid[:] = Station_all # should be transpose
+Station_ID_varid[:] = Station_all 
 
 #####################
 # name of the staiton
@@ -325,14 +327,14 @@ Station_Name_varid[:] = StationName_all
 # ID
 #####################
 # Variables
-ID_varid = ncid.createVariable('ID','i4',('n',))
+#ID_varid = ncid.createVariable('ID','i4',('n',))
 
 # Attributes
-ID_varid.long_name     = 'ID of station in correspondant to shapefile'
-ID_varid.units         = '1'
+#ID_varid.long_name     = 'an arbitrary ID'
+#ID_varid.units         = '1'
 
 # Write data
-ID_varid[:] = np.arange(n)+1
+#ID_varid[:] = np.arange(n)+1
 
 #####################
 # header 
@@ -341,7 +343,6 @@ ncid.Conventions = 'CF-1.6'
 ncid.License     = 'The file is created by Shervan Gharari, under GPL3, https://github.com/ShervanGharari/HYDEX'
 ncid.history     = 'Created ' + time.ctime(time.time())
 ncid.source      = discription_of_data
-ncid.source      = 'the sata set inclused the flow, non values and flags'
 
 #####################
 ncid.close()
