@@ -32,6 +32,6 @@ Export the data into ts3 by choosing export and selecting flow (or other variabl
 
 ![image](https://github.com/ShervanGharari/HYDEX/blob/master/figs/Fig_4.jpg)
 
-Run the ts3_to_HYDAT.py by directing to the folder that the ts3 files are saved, also indicate the locaiton and name of the NetCDF file.
+Run the ts3_to_nc.py by directing to the folder that the ts3 files are saved, also indicate the locaiton and name of the NetCDF file.
 
 Enjoy!
