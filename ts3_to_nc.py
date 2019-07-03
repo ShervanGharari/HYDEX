@@ -31,7 +31,6 @@ import pandas as pd
 import numpy as np
 import re as re
 import datetime
-import matplotlib.pyplot as plt # if the user want to visualize the result
 import glob
 import os
 import netCDF4 as nc4
