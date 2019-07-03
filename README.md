@@ -6,9 +6,9 @@ The utility code for transfer of .ts3 HYDAT flow to NetCDF.
 
 All the streamflow values will be converted to NetCDF file instead of ts3 format.
 
-It is easier to read and compare them.
+It is easier to read and compare gauges.
 
-The data retreval is faster.
+The data retrieval is faster.
 
 Similar starting and ending point for all the data for all the gauges.
 
