@@ -16,7 +16,7 @@ Filling of the missing values between the starting and ending point.
 
 ## How to use
 
-Open the Environemtn Canada and Climate Change Data Explorer (ECCCDataExplorer[https://www.canada.ca/en/environment-climate-change/services/water-overview/quantity/monitoring/survey/data-products-services/explorer.html]).
+Open the Environemtn Canada and Climate Change Data Explorer ([ECCCDataExplorer](https://www.canada.ca/en/environment-climate-change/services/water-overview/quantity/monitoring/survey/data-products-services/explorer.html)).
 
 Select the gauges which you are interested in by filtering the station ID, minumume area, minimume time length of the record.
 
