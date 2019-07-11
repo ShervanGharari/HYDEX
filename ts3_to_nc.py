@@ -111,7 +111,6 @@ for i in np.arange(n):
     # read the dranage area
     DrainageArea = read_info_from_header(file_name,':DrainageArea')
     DrainageArea = DrainageArea.strip('km²')
-    DrainageArea = float(DrainageArea)
     if DrainageArea == '':
         DrainageArea = -1
     else:
