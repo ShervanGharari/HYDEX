@@ -348,7 +348,7 @@ Station_Name_varid[:] = StationName_all
 # header 
 #####################
 ncid.Conventions = 'CF-1.6'
-ncid.License     = 'The file is created by Shervan Gharari, under GPL3, https://github.com/ShervanGharari/HYDEX'
+ncid.License     = 'The file is created by Shervan Gharari, under MIT, https://github.com/ShervanGharari/HYDEX'
 ncid.history     = 'Created ' + time.ctime(time.time())
 ncid.source      = discription_of_data
 
