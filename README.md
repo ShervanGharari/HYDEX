@@ -44,17 +44,17 @@ Load the desirable python version:
 
 Then make the packages by virtual environment or simply typing:
 
-```$> pip install --user <name of the package>```
+```$>pip install --user <name of the package>```
 
 Clone the HYDEX by:
 
-```git clone https://github.com/ShervanGharari/HYDEX.git```
+```$>git clone https://github.com/ShervanGharari/HYDEX.git```
 
 Change the three line of ```ts3_to_nc.py```
 
 Add the interpreteation line. For that type:
 
-```$> which python```
+```$>which python```
 
 ```/cvmfs/soft.computecanada.ca/easybuild/software/2017/Core/python/3.5.4/bin/python```
 
@@ -62,9 +62,9 @@ Copy the line, add ```!#``` in the begining of the line and copy it as the first
 
 Make the file executable by:
 
-```chmod +x ./ts3_to_nc.py```
+```$>chmod +x ./ts3_to_nc.py```
 
 Run the file:
 
-```./ts3_to_nc.py```
+```$>./ts3_to_nc.py```
 
