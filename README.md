@@ -35,3 +35,36 @@ Export the data into ts3 by choosing export and selecting flow (or other variabl
 Run the ts3_to_nc.py by directing to the folder that the ts3 files are saved, also indicate the locaiton and name of the NetCDF file.
 
 Enjoy!
+
+## For use on Plato or Graham
+
+Load the desirable python version:
+
+```$> module load python/3.5```
+
+Then make the packages by virtual environment or simply typing:
+
+```$> pip install --user <name of the package>```
+
+Clone the HYDEX by:
+
+```git clone https://github.com/ShervanGharari/HYDEX.git```
+
+Change the three line of ```ts3_to_nc.py```
+
+Add the interpreteation line. For that type:
+
+```$> which python```
+
+```/cvmfs/soft.computecanada.ca/easybuild/software/2017/Core/python/3.5.4/bin/python```
+
+Copy the line, add ```!#``` in the begining of the line and copy it as the first line of the file ```ts3_to_nc.py```
+
+Make the file executable by:
+
+```chmod +x ./ts3_to_nc.py```
+
+Run the file:
+
+```./ts3_to_nc.py```
+
