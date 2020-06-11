@@ -1,5 +1,3 @@
-#!/cvmfs/soft.computecanada.ca/easybuild/software/2017/Core/python/3.5.4/bin/python
-
 '''
 Authour: Shervan Gharari (https://github.com/ShervanGharari/HYDEX; sh.gharari@gmail.com)
 
@@ -16,7 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-# load all the necessary modules and packages
+#####################
+# User Specified Section
+#####################
+
+name_of_ts3_files = '/Users/shg096/Desktop/*Flow*.ts3' # name and location of the Level of Flow *.ts3 files
+name_of_nc_file = '/Users/shg096/Desktop/final.nc' # name of the output netcdf file
+description = 'Describes N gauges station with code 11 of WSC HYDAT data' # description of the files
+
+
+#####################
+# Load Necessary Packages
+#####################
 import pandas as pd
 import numpy as np
 import re as re
@@ -28,7 +37,7 @@ import time
 
 
 #####################
-# defenition of subroutines
+# Defenition of Subroutines
 #####################
 # defenition to find the end of a header line given the line look_up text such as ":endheader"
 def find_line_number_for_text(name_of_file,lookup_text):
@@ -38,7 +47,7 @@ def find_line_number_for_text(name_of_file,lookup_text):
                 return num
 
 # read the content
-def read_info_from_header(name_of_file,lookup_text):            
+def read_info_from_header(name_of_file,lookup_text):
     with open(name_of_file, encoding = "ISO-8859-1") as myFile:
         for line in myFile:
             if line.startswith(lookup_text):
@@ -46,10 +55,10 @@ def read_info_from_header(name_of_file,lookup_text):
 
 # extract the data
 def extract_data (file_names_part, nc_name, discription_of_data):
-    
+
     file_names = glob.glob(file_names_part) # name of the streamflow files
     file_names.sort()
-    
+
 
     #####################
     # creation of some varibale
@@ -57,7 +66,7 @@ def extract_data (file_names_part, nc_name, discription_of_data):
     idx = pd.date_range('01-01-1850', '01-01-2020') # starting and ending time for the streamflow to be saved
     t = len(idx) # number of time steps
     n = np.array(len(file_names)) # number of station
-    
+
     #####################
     # extraction of data from ts3
     #####################
@@ -69,7 +78,7 @@ def extract_data (file_names_part, nc_name, discription_of_data):
     DrainageAreaEff_all = None
     NoDataValue_all = None
 
-    flows_all = np.array([n,t,])
+    flows_all = np.zeros([n,t,])
     flags_all = np.chararray([n,t,])
 
 
@@ -92,7 +101,7 @@ def extract_data (file_names_part, nc_name, discription_of_data):
         lon = float(lon)
 
         # read the Station ID
-        Station = read_info_from_header(file_name,':Station')        
+        Station = read_info_from_header(file_name,':Station')
 
         # read the Station name
         StationName = read_info_from_header(file_name,':StationName')
@@ -184,7 +193,7 @@ def extract_data (file_names_part, nc_name, discription_of_data):
             DrainageArea_all = np.array(DrainageArea)
             DrainageAreaEff_all = np.array(DrainageAreaEff)
             NoDataValue_all = np.array(NoDataValue)
-            flows_all = flows
+            flows_all [i,:] = flows
             flags_all [i,:] = flags
         else:
             lat_all = np.append(lat_all,lat)
@@ -194,7 +203,7 @@ def extract_data (file_names_part, nc_name, discription_of_data):
             DrainageArea_all = np.append(DrainageArea_all,DrainageArea)
             DrainageAreaEff_all = np.append(DrainageAreaEff_all,DrainageAreaEff)
             NoDataValue_all = np.append(NoDataValue_all,NoDataValue)
-            flows_all = np.append(flows_all, flows)
+            flows_all [i,:] = flows
             flags_all [i,:] = flags
 
     Station_all = np.array(Station_all, dtype='object')
@@ -222,7 +231,7 @@ def extract_data (file_names_part, nc_name, discription_of_data):
     time_varid.axis          = 'T'
 
     # Write data
-    time_varid[:] = np.arange(t)
+    time_varid [:] = np.arange(t)
 
     #####################
     # Variables flow
@@ -232,26 +241,21 @@ def extract_data (file_names_part, nc_name, discription_of_data):
     # Attributes
     Daily_flow_varid.long_name     = 'Daily flow'
     Daily_flow_varid.units         = 'm**3 s**-1'
-    Daily_flow_varid.coordinates    = 'lon lat Station_ID'
+    Daily_flow_varid.coordinates   = 'lon lat Station_ID'
 
     # Write data
-    Daily_flow_varid[:] = flows_all # should be transpose
+    Daily_flow_varid[:,:] = flows_all # should be transpose
 
     #####################
     ## varibale falg
     #####################
-
-    Flags_varid = ncid.createVariable('flags','S1',('n','time',))
-
+    Flags_varid = ncid.createVariable('flags','S1',('n','time',)) #assuming all the fields are floats
     # Attributes
     Flags_varid.long_name     = 'flags; E: Estimate,  A: Partial Day,  B: Ice conditions,  D: Dry,  R: Revised'
     Flags_varid.units         = '1'
 
-
-    # Write data
-    temp = np.array([flags_all],dtype='S1')
-    print(temp)
-    Flags_varid[:] = nc4.stringtochar(temp)
+    # write data
+    Flags_varid [:,:] = flags_all
 
 
     #####################
@@ -264,7 +268,7 @@ def extract_data (file_names_part, nc_name, discription_of_data):
     Effective_area_varid.units         = 'km2'
 
     # Write data
-    Effective_area_varid[:] = DrainageAreaEff_all
+    Effective_area_varid [:] = DrainageAreaEff_all
 
     #####################
     # Variables DrainageArea
@@ -276,7 +280,7 @@ def extract_data (file_names_part, nc_name, discription_of_data):
     Area_varid.units         = 'km2'
 
     # Write data
-    Area_varid[:] = DrainageArea_all
+    Area_varid [:] = DrainageArea_all
 
     #####################
     # Variables lat and lon
@@ -293,8 +297,8 @@ def extract_data (file_names_part, nc_name, discription_of_data):
     lon_varid.standard_name  = 'longitude'
 
     # Write data
-    lat_varid[:] = lon_all
-    lon_varid[:] = lat_all
+    lat_varid [:] = lon_all
+    lon_varid [:] = lat_all
 
     #####################
     # varibale station ID
@@ -307,7 +311,7 @@ def extract_data (file_names_part, nc_name, discription_of_data):
     Station_ID_varidcf_role        = 'timeseries_id'
 
     # Write data
-    Station_ID_varid[:] = Station_all
+    Station_ID_varid [:] = Station_all
 
     #####################
     # name of the staiton
@@ -319,7 +323,7 @@ def extract_data (file_names_part, nc_name, discription_of_data):
     Station_Name_varid.units         = '1'
 
     # Write data
-    Station_Name_varid[:] = StationName_all
+    Station_Name_varid [:] = StationName_all
 
 
     #####################
@@ -333,27 +337,21 @@ def extract_data (file_names_part, nc_name, discription_of_data):
     ID_varid.units         = '1'
 
     # Write data
-    ID_varid[:] = np.arange(n)+1
+    ID_varid = np.arange(n)+1
 
     #####################
-    # header 
+    # header
     #####################
     ncid.Conventions = 'CF-1.6'
-    ncid.License     = 'The file is created by Shervan Gharari, under MIT, https://github.com/ShervanGharari/HYDEX WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND'
+    ncid.License     = 'The file is created by HYDEX by Shervan Gharari, under MIT, https://github.com/ShervanGharari/HYDEX WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND'
     ncid.history     = 'Created ' + time.ctime(time.time())
     ncid.source      = discription_of_data
 
     #####################
     ncid.close()
 
-extract_data ('./HYDAT/HYDAT01/*Daily_Flow*', './HYDAT_01.nc', 'described 336 gauges stating with code 01 of WSC HYDAT data')
-extract_data ('./HYDAT/HYDAT02/*Daily_Flow*', './HYDAT_02.nc', 'described 1441 gauges stating with code 02 of WSC HYDAT data')
-extract_data ('./HYDAT/HYDAT03/*Daily_Flow*', './HYDAT_03.nc', 'described 166 gauges stating with code 03 of WSC HYDAT data')
-extract_data ('./HYDAT/HYDAT04/*Daily_Flow*', './HYDAT_04.nc', 'described 88 gauges stating with code 04 of WSC HYDAT data')
-extract_data ('./HYDAT/HYDAT05/*Daily_Flow*', './HYDAT_05.nc', 'described 1418 gauges stating with code 05 of WSC HYDAT data')
-extract_data ('./HYDAT/HYDAT06/*Daily_Flow*', './HYDAT_06.nc', 'described 110 gauges stating with code 06 of WSC HYDAT data')
-extract_data ('./HYDAT/HYDAT07/*Daily_Flow*', './HYDAT_07.nc', 'described 365 gauges stating with code 07 of WSC HYDAT data')
-extract_data ('./HYDAT/HYDAT08/*Daily_Flow*', './HYDAT_08.nc', 'described 1957 gauges stating with code 08 of WSC HYDAT data')
-extract_data ('./HYDAT/HYDAT09/*Daily_Flow*', './HYDAT_09.nc', 'described 70 gauges stating with code 09 of WSC HYDAT data')
-extract_data ('./HYDAT/HYDAT10/*Daily_Flow*', './HYDAT_10.nc', 'described 192 gauges stating with code 10 of WSC HYDAT data')
-extract_data ('./HYDAT/HYDAT11/*Daily_Flow*', './HYDAT_11.nc', 'described 186 gauges stating with code 11 of WSC HYDAT data')
+
+#####################
+# Executing the Function
+#####################
+extract_data (name_of_ts3_files, name_of_nc_file, description)
