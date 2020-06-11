@@ -17,7 +17,7 @@ limitations under the License.
 #####################
 # User Specified Section
 #####################
-name_of_ts3_files  = 'path/*Flow*.ts3' # name and location of the Level of Flow *.ts3 files
+name_of_ts3_files  = 'path/*Level*.ts3' # name and location of the Level of Flow *.ts3 files
 name_of_nc_file    = 'path/final.nc' # name of the output netcdf file
 description        = 'Describes N gauges station with code 11 of WSC HYDAT data' # description of the files
 
@@ -91,12 +91,12 @@ def extract_data (file_names_part, nc_name, discription_of_data):
         # print(line_header_ends)
 
         # read the lat of the station
-        lat = read_info_from_header(file_name,':LocationX')
-        lat = float(lat)
+        lon = read_info_from_header(file_name,':LocationX')
+        lon = float(lon)
 
         # read the lon of the station
-        lon = read_info_from_header(file_name,':LocationY')
-        lon = float(lon)
+        lat = read_info_from_header(file_name,':LocationY')
+        lat = float(lat)
 
         # read the Station ID
         Station = read_info_from_header(file_name,':Station')
@@ -120,7 +120,12 @@ def extract_data (file_names_part, nc_name, discription_of_data):
             DrainageAreaEff = float(DrainageAreaEff)
 
 
-        print(i, file_name, Station, DrainageArea, DrainageAreaEff)
+        print(i)
+        print('File name: ', file_name)
+        print('Station ID: ', Station)
+        print('Station name: ', StationName)
+        print('Drainage Area: ', DrainageArea)
+        print('lat: ', lat, ' - lon: ', lon)
 
         NoDataValue = read_info_from_header(file_name,':NoDataValue')
         NoDataValue = float(NoDataValue)
