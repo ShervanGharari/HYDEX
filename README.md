@@ -40,9 +40,9 @@ Enjoy!
 
 Load the desirable python version:
 
-```$> module load python/3.5```
+```$>module load python/3.5```
 
-Then make the packages by virtual environment or simply typing:
+Then make the packages by [virtual environment](https://docs.computecanada.ca/wiki/Python#:~:text=Creating%20and%20using%20a%20virtual%20environment,can%20easily%20install%20Python%20packages.&text=We%20recommend%20that%20you%20create,s)%20in%20your%20home%20directory.) or simply typing:
 
 ```$>pip install --user <name of the package>```
 
