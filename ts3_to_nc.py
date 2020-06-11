@@ -17,11 +17,9 @@ limitations under the License.
 #####################
 # User Specified Section
 #####################
-
-name_of_ts3_files = '/Users/shg096/Desktop/*Flow*.ts3' # name and location of the Level of Flow *.ts3 files
-name_of_nc_file = '/Users/shg096/Desktop/final.nc' # name of the output netcdf file
-description = 'Describes N gauges station with code 11 of WSC HYDAT data' # description of the files
-
+name_of_ts3_files  = 'path/*Flow*.ts3' # name and location of the Level of Flow *.ts3 files
+name_of_nc_file    = 'path/final.nc' # name of the output netcdf file
+description        = 'Describes N gauges station with code 11 of WSC HYDAT data' # description of the files
 
 #####################
 # Load Necessary Packages
