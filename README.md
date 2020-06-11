@@ -58,7 +58,7 @@ Add the interpreteation line. For that type:
 
 ```/cvmfs/soft.computecanada.ca/easybuild/software/2017/Core/python/3.5.4/bin/python```
 
-Copy the line, add ```!#``` in the begining of the line and copy it as the first line of the file ```ts3_to_nc.py```
+Copy the line, add ```#!``` in the begining of the line and copy it as the first line of the file ```ts3_to_nc.py```
 
 Make the file executable by:
 
