@@ -50,7 +50,7 @@ Clone the HYDEX by:
 
 ```$>git clone https://github.com/ShervanGharari/HYDEX.git```
 
-Change the three line of ```ts3_to_nc.py```
+Change the three line of ```ts3_to_nc.py``` specified for the user to change.
 
 Add the interpreteation line. For that type:
 
@@ -67,4 +67,3 @@ Make the file executable by:
 Run the file:
 
 ```$>./ts3_to_nc.py```
-
